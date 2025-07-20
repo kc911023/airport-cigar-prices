@@ -2,7 +2,7 @@
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>全球机场雪茄价格</title>
+    <title>全球机场雪茄价格查询</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -10,16 +10,17 @@
     <style>
       body {
         font-family: sans-serif;
-        max-width: 600px;
+        max-width: 700px;
         margin: 2rem auto;
         padding: 1rem;
       }
       h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
-      label, select {
+      label, select, input {
         margin-top: 1rem;
         display: block;
+        font-size: 1rem;
       }
       ul {
         margin-top: 1rem;
@@ -30,42 +31,51 @@
     <div id="root"></div>
     <script type="text/babel">
       function App() {
-        const airportData = {
+        const data = {
           HKG: [
             { brand: "Cohiba Siglo VI", price: "HKD 580/支" },
-            { brand: "Montecristo No.2", price: "HKD 410/支" },
+            { brand: "Montecristo No.2", price: "HKD 410/支" }
           ],
           DXB: [
-            { brand: "Romeo y Julieta Churchill", price: "USD 45/支" },
             { brand: "Cohiba Siglo VI", price: "USD 65/支" },
+            { brand: "Romeo y Julieta Churchill", price: "USD 45/支" }
           ],
           CDG: [
-            { brand: "Montecristo Edmundo", price: "EUR 22/支" },
+            { brand: "Montecristo Edmundo", price: "EUR 22/支" }
           ]
         };
 
-        const [selectedAirport, setSelectedAirport] = React.useState("HKG");
+        const [searchTerm, setSearchTerm] = React.useState("");
+
+        const filteredResults = Object.entries(data).flatMap(([airport, items]) =>
+          items
+            .filter(item => item.brand.toLowerCase().includes(searchTerm.toLowerCase()))
+            .map(item => ({ ...item, airport }))
+        );
 
         return (
           <main>
-            <h1>🌍 全球机场雪茄价格</h1>
+            <h1>🌍 全球机场雪茄价格查询</h1>
 
-            <label htmlFor="airport">选择机场：</label>
-            <select id="airport" value={selectedAirport} onChange={e => setSelectedAirport(e.target.value)}>
-              {Object.keys(airportData).map(code => (
-                <option key={code} value={code}>{code}</option>
-              ))}
-            </select>
+            <label>输入品牌名称：</label>
+            <input
+              type="text"
+              placeholder="如 Cohiba、Montecristo..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
 
             <ul>
-              {airportData[selectedAirport].map((item, i) => (
-                <li key={i}>{item.brand} – {item.price}</li>
-              ))}
+              {filteredResults.length > 0 ? (
+                filteredResults.map((item, index) => (
+                  <li key={index}>
+                    {item.airport} – {item.brand} – {item.price}
+                  </li>
+                ))
+              ) : (
+                <li style={{ color: 'gray' }}>请输入品牌关键字进行搜索</li>
+              )}
             </ul>
-
-            <p style={{ marginTop: '2rem', fontStyle: 'italic', color: 'gray' }}>
-              更多机场、品牌、比价功能开发中...
-            </p>
           </main>
         );
       }
@@ -75,4 +85,3 @@
     </script>
   </body>
 </html>
-<!-- force update -->
