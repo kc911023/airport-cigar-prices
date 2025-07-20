@@ -1,18 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>全球机场雪茄价格</title>
-</head>
-<body>
-  <h1>🌍 全球机场雪茄价格</h1>
-  <p>示例数据展示：</p>
-  <ul>
-    <li>香港 HKG - Cohiba Siglo VI - HKD 580/支</li>
-    <li>迪拜 DXB - Romeo y Julieta Churchill - USD 45/支</li>
-    <li>巴黎 CDG - Montecristo Edmundo - EUR 22/支</li>
-  </ul>
-  <p>更多功能开发中...</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>全球机场雪茄价格</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      label, select {
+        margin-top: 1rem;
+        display: block;
+      }
+      ul {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      function App() {
+        const airportData = {
+          HKG: [
+            { brand: "Cohiba Siglo VI", price: "HKD 580/支" },
+            { brand: "Montecristo No.2", price: "HKD 410/支" },
+          ],
+          DXB: [
+            { brand: "Romeo y Julieta Churchill", price: "USD 45/支" },
+            { brand: "Cohiba Siglo VI", price: "USD 65/支" },
+          ],
+          CDG: [
+            { brand: "Montecristo Edmundo", price: "EUR 22/支" },
+          ]
+        };
+
+        const [selectedAirport, setSelectedAirport] = React.useState("HKG");
+
+        return (
+          <main>
+            <h1>🌍 全球机场雪茄价格</h1>
+
+            <label htmlFor="airport">选择机场：</label>
+            <select id="airport" value={selectedAirport} onChange={e => setSelectedAirport(e.target.value)}>
+              {Object.keys(airportData).map(code => (
+                <option key={code} value={code}>{code}</option>
+              ))}
+            </select>
+
+            <ul>
+              {airportData[selectedAirport].map((item, i) => (
+                <li key={i}>{item.brand} – {item.price}</li>
+              ))}
+            </ul>
+
+            <p style={{ marginTop: '2rem', fontStyle: 'italic', color: 'gray' }}>
+              更多机场、品牌、比价功能开发中...
+            </p>
+          </main>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
 </html>
